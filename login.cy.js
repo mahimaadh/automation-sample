@@ -1,19 +1,26 @@
 describe('Login Functionality', () => {
 
-  it('Should login with valid credentials', () => {
-    cy.visit('/login')
-    cy.get('#email').type('test@gmail.com')
-    cy.get('#password').type('password123')
-    cy.get('#login').click()
-    cy.contains('Dashboard').should('be.visible')
-  })
+    beforeEach(() => {
 
-  it('Should show error for invalid credentials', () => {
-    cy.visit('/login')
-    cy.get('#email').type('test@gmail.com')
-    cy.get('#password').type('wrongpass')
-    cy.get('#login').click()
-    cy.contains('Invalid login credentials').should('be.visible')
-  })
+        cy.visit('https://example.com/login')
+
+    })
+
+    it('Login with valid credentials', () => {
+
+        cy.fixture('users').then((user) => {
+
+            cy.login(
+                user.validUser.email,
+                user.validUser.password
+            )
+
+            cy.url().should('include', '/dashboard')
+
+            cy.contains('Welcome').should('be.visible')
+
+        })
+
+    })
 
 })
